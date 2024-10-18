@@ -2,25 +2,26 @@ import {
   getMinimumBalanceForRentExemptMint,
   MINT_SIZE,
   TOKEN_PROGRAM_ID,
+  createInitializeMint2Instruction,
 } from "@solana/spl-token";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { Keypair, SystemProgram, Transaction } from "@solana/web3.js";
 
 export function TokenLaunchpad() {
-  const wallet = useWallet; // gives you currently connected wallet
-  const { connection } = useConnection;
+  const wallet = useWallet(); // gives you currently connected wallet
+  const { connection } = useConnection();
 
   async function createToken() {
     const name = document.getElementById("name").value;
     const symbol = document.getElementById("symbol").value;
     const imageUrl = document.getElementById("imageUrl").value;
-    const intialSupply = document.getElementById("intialSupply").value;
+    const intialSupply = document.getElementById("initialSupply").value;
 
     const lamports = await getMinimumBalanceForRentExemptMint(connection);
     const keypair = Keypair.generate();
     const transaction = new Transaction().add(
       SystemProgram.createAccount({
-        fromPubkey: payer.publicKey,
+        fromPubkey: wallet.publicKey,
         newAccountPubkey: keypair.publicKey,
         space: MINT_SIZE,
         lamports,
